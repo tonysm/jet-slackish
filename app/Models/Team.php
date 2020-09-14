@@ -53,9 +53,13 @@ class Team extends JetstreamTeam
 
     public function createSystemChannel(string $name): Channel
     {
-        return $this->channels()->save((new Channel())->forceFill([
+        $channel = (new Channel())->forceFill([
             'name' => $name,
             'system_channel' => true,
-        ]));
+        ]);
+
+        $this->channels()->save($channel);
+
+        return $channel;
     }
 }
