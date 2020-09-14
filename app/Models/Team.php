@@ -62,4 +62,11 @@ class Team extends JetstreamTeam
 
         return $channel;
     }
+
+    public function createChannel(string $name): Channel
+    {
+        return $this->channels()->create([
+            'name' => $name,
+        ]);
+    }
 }

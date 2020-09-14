@@ -2056,6 +2056,11 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Jetstream_DialogModal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../Jetstream/DialogModal */ "./resources/js/Jetstream/DialogModal.vue");
+/* harmony import */ var _Jetstream_Button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Jetstream/Button */ "./resources/js/Jetstream/Button.vue");
+/* harmony import */ var _Jetstream_SecondaryButton__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Jetstream/SecondaryButton */ "./resources/js/Jetstream/SecondaryButton.vue");
+/* harmony import */ var _Jetstream_Input__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Jetstream/Input */ "./resources/js/Jetstream/Input.vue");
+/* harmony import */ var _Jetstream_InputError__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Jetstream/InputError */ "./resources/js/Jetstream/InputError.vue");
 //
 //
 //
@@ -2070,12 +2075,83 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    JetDialogModal: _Jetstream_DialogModal__WEBPACK_IMPORTED_MODULE_0__["default"],
+    JetButton: _Jetstream_Button__WEBPACK_IMPORTED_MODULE_1__["default"],
+    JetSecondaryButton: _Jetstream_SecondaryButton__WEBPACK_IMPORTED_MODULE_2__["default"],
+    JetInput: _Jetstream_Input__WEBPACK_IMPORTED_MODULE_3__["default"],
+    JetInputError: _Jetstream_InputError__WEBPACK_IMPORTED_MODULE_4__["default"]
+  },
   name: "CurrentTeamHeader",
   props: {
     currentTeam: Object,
     currentChannel: Object,
     teams: Array
+  },
+  data: function data() {
+    return {
+      newChannelModal: false,
+      channelForm: this.$inertia.form({
+        name: null
+      }, {
+        bag: 'newChannelForm'
+      })
+    };
+  },
+  methods: {
+    showNewChannelModal: function showNewChannelModal() {
+      var _this = this;
+
+      this.newChannelModal = true;
+      this.$nextTick(function () {
+        _this.$refs.channelNameInput.focus();
+      });
+    },
+    createChannel: function createChannel() {
+      var _this2 = this;
+
+      this.channelForm.post("/teams/".concat(this.currentTeam.id, "/channels")).then(function () {
+        if (!_this2.channelForm.hasErrors()) {
+          _this2.newChannelModal = false;
+        }
+      });
+    }
   }
 });
 
@@ -24681,39 +24757,156 @@ var render = function() {
               domProps: { textContent: _vm._s(_vm.currentTeam.name) }
             }),
             _vm._v(" "),
-            _c("a", { attrs: { href: "#", title: "New channel" } }, [
-              _c(
-                "svg",
-                {
-                  staticClass: "w-4 h-4",
-                  attrs: {
-                    fill: "none",
-                    stroke: "currentColor",
-                    viewBox: "0 0 24 24",
-                    xmlns: "http://www.w3.org/2000/svg"
+            _c(
+              "a",
+              {
+                attrs: { href: "#", title: "New channel" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.showNewChannelModal($event)
                   }
-                },
-                [
-                  _c("path", {
+                }
+              },
+              [
+                _c(
+                  "svg",
+                  {
+                    staticClass: "w-4 h-4",
                     attrs: {
-                      "stroke-linecap": "round",
-                      "stroke-linejoin": "round",
-                      "stroke-width": "2",
-                      d:
-                        "M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                      fill: "none",
+                      stroke: "currentColor",
+                      viewBox: "0 0 24 24",
+                      xmlns: "http://www.w3.org/2000/svg"
                     }
-                  })
-                ]
-              )
-            ])
+                  },
+                  [
+                    _c("path", {
+                      attrs: {
+                        "stroke-linecap": "round",
+                        "stroke-linejoin": "round",
+                        "stroke-width": "2",
+                        d:
+                          "M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                      }
+                    })
+                  ]
+                )
+              ]
+            )
           ]
         )
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "p-2 text-gray-700" }, [
         _vm._v("#" + _vm._s(_vm.currentChannel.name))
-      ])
-    ]
+      ]),
+      _vm._v(" "),
+      _c("jet-dialog-modal", {
+        attrs: { show: _vm.newChannelModal },
+        on: {
+          close: function($event) {
+            _vm.newChannelModal = false
+          }
+        },
+        scopedSlots: _vm._u([
+          {
+            key: "title",
+            fn: function() {
+              return [_vm._v("\n            New Channel\n        ")]
+            },
+            proxy: true
+          },
+          {
+            key: "content",
+            fn: function() {
+              return [
+                _vm._v(
+                  "\n            What is the name of the channel you want to create? (No need to start with a hashtag)\n\n            "
+                ),
+                _c(
+                  "div",
+                  { staticClass: "mt-4" },
+                  [
+                    _c("jet-input", {
+                      ref: "channelNameInput",
+                      staticClass: "mt-1 block w-3/4",
+                      attrs: { type: "text", placeholder: "Channel name" },
+                      nativeOn: {
+                        keyup: function($event) {
+                          if (
+                            !$event.type.indexOf("key") &&
+                            _vm._k(
+                              $event.keyCode,
+                              "enter",
+                              13,
+                              $event.key,
+                              "Enter"
+                            )
+                          ) {
+                            return null
+                          }
+                          return _vm.createChannel($event)
+                        }
+                      },
+                      model: {
+                        value: _vm.channelForm.name,
+                        callback: function($$v) {
+                          _vm.$set(_vm.channelForm, "name", $$v)
+                        },
+                        expression: "channelForm.name"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("jet-input-error", {
+                      staticClass: "mt-2",
+                      attrs: { message: _vm.channelForm.error("name") }
+                    })
+                  ],
+                  1
+                )
+              ]
+            },
+            proxy: true
+          },
+          {
+            key: "footer",
+            fn: function() {
+              return [
+                _c(
+                  "jet-secondary-button",
+                  {
+                    nativeOn: {
+                      click: function($event) {
+                        _vm.newChannelModal = false
+                      }
+                    }
+                  },
+                  [_vm._v("\n                Nevermind\n            ")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "jet-button",
+                  {
+                    staticClass: "ml-2",
+                    class: { "opacity-25": _vm.channelForm.processing },
+                    attrs: { disabled: _vm.channelForm.processing },
+                    nativeOn: {
+                      click: function($event) {
+                        return _vm.createChannel($event)
+                      }
+                    }
+                  },
+                  [_vm._v("\n                Create Channel\n            ")]
+                )
+              ]
+            },
+            proxy: true
+          }
+        ])
+      })
+    ],
+    1
   )
 }
 var staticRenderFns = []

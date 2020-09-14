@@ -29,6 +29,16 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         return redirect()->route('channels.show', $channel);
     })->name('home');
 
+    Route::post('teams/{team}/channels', function (\App\Models\Team $team) {
+        $channel = (new \App\Actions\Channels\CreateNewChannel())->handle(
+            request()->user(),
+            $team,
+            request()->only('name')
+        );
+
+        return redirect()->route('channels.show', $channel);
+    })->name('teams.channels.store');
+
     Route::get('channels/{channel}', function (\App\Models\Channel $channel) {
         $channels = request()->user()->currentTeam->channels;
 
