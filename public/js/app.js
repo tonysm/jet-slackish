@@ -2139,9 +2139,9 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.newChannelModal = true;
-      this.$nextTick(function () {
+      setTimeout(function () {
         _this.$refs.channelNameInput.focus();
-      });
+      }, 250);
     },
     createChannel: function createChannel() {
       var _this2 = this;

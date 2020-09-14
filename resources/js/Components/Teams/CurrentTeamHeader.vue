@@ -75,9 +75,9 @@ export default {
         showNewChannelModal () {
             this.newChannelModal = true;
 
-            this.$nextTick(() => {
+            setTimeout(() => {
                 this.$refs.channelNameInput.focus();
-            });
+            }, 250);
         },
         createChannel() {
             this.channelForm.post(`/teams/${this.currentTeam.id}/channels`)
