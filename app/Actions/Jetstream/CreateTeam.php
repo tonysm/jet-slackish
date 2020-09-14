@@ -2,6 +2,7 @@
 
 namespace App\Actions\Jetstream;
 
+use App\Models\Team;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Jetstream\Contracts\CreatesTeams;
@@ -24,9 +25,9 @@ class CreateTeam implements CreatesTeams
             'name' => 'required|string|max:255',
         ])->validateWithBag('createTeam');
 
-        return $user->ownedTeams()->create([
+        return tap($user->ownedTeams()->create([
             'name' => $input['name'],
             'personal_team' => false,
-        ]);
+        ]), fn (Team $team) => $team->createSystemChannel('general'));
     }
 }

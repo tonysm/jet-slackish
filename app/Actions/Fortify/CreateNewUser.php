@@ -2,6 +2,7 @@
 
 namespace App\Actions\Fortify;
 
+use App\Models\Channel;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -45,10 +46,13 @@ class CreateNewUser implements CreatesNewUsers
      */
     protected function createTeam(User $user)
     {
-        $user->ownedTeams()->save(Team::forceCreate([
+        /** @var \App\Models\Team $team */
+        $user->ownedTeams()->save($team = Team::forceCreate([
             'user_id' => $user->id,
             'name' => explode(' ', $user->name, 2)[0]."'s Team",
             'personal_team' => true,
         ]));
+
+        $team->createSystemChannel('general');
     }
 }
