@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property \App\Models\Team $team
+ * @property int $team_id
  * @property \Illuminate\Database\Eloquent\Collection|\App\Models\Message[] $messages
  */
 class Channel extends Model
@@ -16,6 +17,10 @@ class Channel extends Model
 
     protected $fillable = [
         'name',
+    ];
+
+    protected $casts = [
+        'team_id' => 'int',
     ];
 
     public function team()

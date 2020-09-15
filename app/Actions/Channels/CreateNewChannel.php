@@ -28,7 +28,7 @@ class CreateNewChannel
 
         $channel = $team->createChannel($channelParams['name']);
 
-        event(new NewChannel($channel));
+        broadcast(new NewChannel($channel->load(['team'])))->toOthers();
 
         return $channel;
     }

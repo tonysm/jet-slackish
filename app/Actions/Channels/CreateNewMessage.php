@@ -20,7 +20,7 @@ class CreateNewMessage
             'content' => $message,
         ]));
 
-        event(new NewMessage($message));
+        broadcast(new NewMessage($message->load(['channel', 'user'])))->toOthers();
 
         return $message;
     }

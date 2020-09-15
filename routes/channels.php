@@ -16,3 +16,11 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+
+Broadcast::channel('App.Models.Team.{team}', function (\App\Models\User $user, \App\Models\Team $team) {
+    if (! $user->belongsToTeam($team)) {
+        return false;
+    }
+
+    return $user;
+});
