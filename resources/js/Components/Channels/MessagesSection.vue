@@ -10,7 +10,7 @@
                         <span class="font-semibold">
                             {{ message.user.name }}:
                         </span>
-                        <span v-text="message.content"></span>
+                        <span v-text="message.content.content"></span>
                     </span>
                 </span>
             </div>

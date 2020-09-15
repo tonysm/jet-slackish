@@ -48,7 +48,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             'messages' => $channel->messages()
                 ->latest()
                 ->take(50)
-                ->with('user')
+                ->with(['user', 'content'])
                 ->get()
                 ->reverse()
                 ->values(),

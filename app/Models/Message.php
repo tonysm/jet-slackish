@@ -24,4 +24,9 @@ class Message extends Model
     {
         return $this->belongsTo(Channel::class);
     }
+
+    public function content()
+    {
+        return $this->morphTo();
+    }
 }
