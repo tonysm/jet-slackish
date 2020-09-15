@@ -18,14 +18,14 @@
                 <div class="flex-1 overflow-y-auto flex divide-x divide-gray-200">
                     <div class="w-56 flex-none flex flex-col justify-between bg-gray-100 overflow-hidden overflow-y-auto">
                         <ChannelList
-                            :channels="channels"
+                            :channels="allChannels"
                         />
                         <CurrentUser
                             :user="$page.user"
                         />
                     </div>
                     <MessagesSection
-                        :messages="messages"
+                        :messages="allMessages"
                         :current-channel="currentChannel"
                     />
                 </div>
@@ -49,8 +49,10 @@ import MessagesSection from "../../Components/Channels/MessagesSection";
 import CurrentTeamHeader from "../../Components/Teams/CurrentTeamHeader";
 import CurrentUser from "../../Components/Users/CurrentUser";
 import TeamList from "../../Components/Teams/TeamList";
+import PersistentSockets from "./PersistentSockets";
 
 export default {
+    layout: PersistentSockets,
     components: {
         TeamList,
         CurrentUser,
@@ -74,7 +76,9 @@ export default {
     data() {
         return {
             showingNavigationDropdown: false,
-        }
+            messagesOverSocket: {},
+            channelsOverSocket: {},
+        };
     },
 
     methods: {
@@ -88,6 +92,24 @@ export default {
     },
 
     computed: {
+        allChannels() {
+            return [
+                ...this.channels,
+                ...(this.channelsOverSocket[`${this.currentTeam.id}`] || []),
+            ];
+        },
+        allMessages() {
+            return [
+                ...this.messages,
+                ...(this.messagesOverSocket[`${this.currentChannel.id}`] || []),
+            ];
+        },
+        channelIds() {
+            return this.channels.map(({ id }) => id);
+        },
+        messageIds() {
+            return this.messages.map(({ id }) => id);
+        },
         currentTeam() {
             return this.$page.user.current_team;
         },
@@ -96,7 +118,34 @@ export default {
         },
         path() {
             return window.location.pathname
-        }
+        },
+    },
+
+    mounted() {
+        window.Bus.$on('messages.new', ({ message }) => {
+            if (this.messageIds.includes(message.id)) return;
+
+            if (! this.messagesOverSocket[`${message.channel_id}`]) {
+                this.$set(this.messagesOverSocket, `${message.channel_id}`, []);
+            }
+
+            this.messagesOverSocket[`${message.channel_id}`].push(message);
+        });
+
+        window.Bus.$on('channels.new', ({ channel }) => {
+            if (this.channelIds.includes(channel.id)) return;
+
+            if (! this.channelsOverSocket[`${channel.team_id}`]) {
+                this.$set(this.channelsOverSocket, `${channel.team_id}`, []);
+            }
+
+            this.channelsOverSocket[`${channel.team_id}`].push(channel);
+        });
+    },
+
+    beforeDestroy() {
+        window.Bus.$off('messages.new');
+        window.Bus.$off('channels.new');
     },
 }
 </script>

@@ -47,6 +47,7 @@
                     content: null,
                 }, {
                     bag: 'channelNewMessage',
+                    preserveState: false,
                 })
             }
         },
@@ -60,8 +61,8 @@
         methods: {
             sendNewMessage() {
                 this.form.post(`/channels/${this.currentChannel.id}/messages`, {
-                    preserveScroll: true,
-                });
+                    preserveState: false,
+                })
             },
             scrollBottom(behavior = 'auto') {
                 this.$nextTick(() => {
