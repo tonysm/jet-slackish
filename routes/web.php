@@ -56,12 +56,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     })->name('channels.show');
 
     Route::post('/channels/{channel}/messages', function (\App\Models\Channel  $channel) {
-        request()->validate(['content' => 'required|string']);
-
         (new App\Actions\Channels\CreateNewMessage())->handle(
             request()->user(),
             $channel,
-            request()->input('content')
+            request()->only('content')
         );
 
         return redirect()->back();

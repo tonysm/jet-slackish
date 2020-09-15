@@ -20,7 +20,7 @@
                 @submit.prevent="sendNewMessage"
                 class="w-full flex items-center p-2 text-gray-700 border-2 border-transparent focus:outline-none focus:border-gray-300 transition duration-150 ease-in-out"
             >
-                <input autofocus ref="newMessageInput" type="text" class="flex-1 mr-2" placeholder="Say something" v-model="form.content" />
+                <input autofocus ref="newMessageInput" type="text" class="flex-1 mr-2" placeholder="Say something" v-model="form.content.content" />
 
                 <button
                     type="submit"
@@ -44,7 +44,10 @@
             return {
                 form: this.$inertia.form({
                     '_method': 'POST',
-                    content: null,
+                    content: {
+                        content: null,
+                        type: 'text_messages',
+                    },
                 }, {
                     bag: 'channelNewMessage',
                     preserveState: false,
