@@ -26,6 +26,8 @@
                     </div>
                     <MessagesSection
                         :messages="allMessages"
+                        :load-more="loadMore"
+                        :has-more-messages="Boolean(messages.next_page_url)"
                         :current-channel="currentChannel"
                     />
                 </div>
@@ -79,16 +81,27 @@ export default {
             messagesOverSocket: {},
             channelsOverSocket: {},
             localMessages: this.messages.data,
+            paginationMeta: this.messages,
         };
     },
 
     methods: {
+        loadMore() {
+            return axios.get(`/channels/${this.currentChannel.id}?page=${this.paginationMeta.current_page + 1}`)
+                .then(({ data }) => {
+                    this.localMessages = [
+                        ...data.data,
+                        ...this.localMessages,
+                    ];
+                    this.paginationMeta = data;
+                });
+        },
         switchToTeam(team) {
             this.$inertia.put('/current-team', {
                 'team_id': team.id
             }, {
                 preserveState: false
-            })
+            });
         },
     },
 
