@@ -40,15 +40,21 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     })->name('teams.channels.store');
 
     Route::get('channels/{channel}', function (\App\Models\Channel $channel) {
+        $messages = tap($channel->messages()
+            ->latest()
+            ->with(['user', 'content'])
+            ->paginate(50), function (\Illuminate\Pagination\LengthAwarePaginator $awarePaginator) {
+                $awarePaginator->setCollection($awarePaginator->getCollection()->reverse()->values());
+            });
+
+        if (request()->wantsJson()) {
+            return $messages;
+        }
+
         return \Inertia\Inertia::render('Channels/Show', [
             'channels' => fn() => request()->user()->currentTeam->channels,
             'currentChannel' => $channel,
-            'messages' => tap($channel->messages()
-                ->latest()
-                ->with(['user', 'content'])
-                ->paginate(50), function (\Illuminate\Pagination\LengthAwarePaginator $awarePaginator) {
-                    $awarePaginator->getCollection()->reverse()->values();
-                }),
+            'messages' => $messages,
         ]);
     })->name('channels.show');
 
