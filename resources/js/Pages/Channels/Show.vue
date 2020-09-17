@@ -16,7 +16,7 @@
                     :teams="teams"
                 />
                 <div class="flex-1 overflow-y-auto flex divide-x divide-gray-200">
-                    <div class="w-56 flex-none flex flex-col justify-between bg-gray-100 overflow-hidden overflow-y-auto">
+                    <div class="w-56 flex-none flex flex-col justify-between bg-gray-100 overflow-hidden">
                         <ChannelList
                             :channels="allChannels"
                         />
