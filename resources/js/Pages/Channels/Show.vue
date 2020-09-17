@@ -70,7 +70,7 @@ export default {
     props: {
         currentChannel: Object,
         channels: Array,
-        messages: Array,
+        messages: Object,
     },
 
     data() {
@@ -78,6 +78,7 @@ export default {
             showingNavigationDropdown: false,
             messagesOverSocket: {},
             channelsOverSocket: {},
+            localMessages: this.messages.data,
         };
     },
 
@@ -100,7 +101,7 @@ export default {
         },
         allMessages() {
             return [
-                ...this.messages,
+                ...this.localMessages,
                 ...(this.messagesOverSocket[`${this.currentChannel.id}`] || []),
             ];
         },
@@ -108,7 +109,7 @@ export default {
             return this.channels.map(({ id }) => id);
         },
         messageIds() {
-            return this.messages.map(({ id }) => id);
+            return this.localMessages.map(({ id }) => id);
         },
         currentTeam() {
             return this.$page.user.current_team;
